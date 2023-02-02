@@ -73,8 +73,9 @@
 					
 					<li class="nav-item"><a class="nav-link" href="#"
 						th:href="@{compress-pdf}"
-						th:classappend="${currentPage}=='compress-pdf' ? 'active' : ''"></a></li>				
-					<input type="checkbox" id="toggle-dark-mode"
+						th:classappend="${currentPage}=='compress-pdf' ? 'active' : ''"></a></li>	
+									
+					<input type="checkbox" id="toggle-dark-mode" checked="true"
 						th:onclick="javascript:toggleDarkMode()">
 					<a class="nav-link" href="#" for="toggle-dark-mode">Dark Mode</a>
 
