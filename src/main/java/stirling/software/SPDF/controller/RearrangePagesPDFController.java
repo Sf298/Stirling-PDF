@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import stirling.software.SPDF.utils.PdfUtils;
+
 @Controller
 public class RearrangePagesPDFController {
 
@@ -41,7 +43,7 @@ public class RearrangePagesPDFController {
 			// Split the page order string into an array of page numbers or range of numbers
 			String[] pageOrderArr = pageOrder.split(",");
 			List<Integer> newPageOrder = new ArrayList<Integer>();
-			//int[] newPageOrder = new int[pageOrderArr.length];
+			// int[] newPageOrder = new int[pageOrderArr.length];
 			int totalPages = document.getNumberOfPages();
 
 			// loop through the page order array
@@ -59,11 +61,11 @@ public class RearrangePagesPDFController {
 					// loop through the range of pages
 					for (int j = start; j <= end; j++) {
 						// print the current index
-						newPageOrder.add( j - 1);
+						newPageOrder.add(j - 1);
 					}
 				} else {
 					// if the element is a single page
-					newPageOrder.add( Integer.parseInt(element) - 1);
+					newPageOrder.add(Integer.parseInt(element) - 1);
 				}
 			}
 
@@ -83,21 +85,7 @@ public class RearrangePagesPDFController {
 				document.addPage(page);
 			}
 
-			// Save the rearranged PDF to a ByteArrayOutputStream
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			document.save(outputStream);
-
-			// Close the original document
-			document.close();
-
-			// Prepare the response headers
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_PDF);
-			headers.setContentDispositionFormData("attachment", "rearranged.pdf");
-			headers.setContentLength(outputStream.size());
-
-			// Return the response with the PDF data and headers
-			return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
+			return PdfUtils.pdfDocToWebResponse(document, pdfFile.getName() + "_rearranged.pdf");
 		} catch (IOException e) {
 
 			logger.error("Failed rearranging documents", e);

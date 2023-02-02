@@ -19,10 +19,6 @@
 						th:classappend="${currentPage}=='split-pdfs' ? 'active' : ''">Split
 							PDFs</a></li>
 					<li class="nav-item"><a class="nav-link" href="#"
-						th:href="@{convert-pdf}"
-						th:classappend="${currentPage}=='convert-pdf' ? 'active' : ''">Convert
-							to/from PDF</a></li>
-					<li class="nav-item"><a class="nav-link" href="#"
 						th:href="@{add-image}"
 						th:classappend="${currentPage}=='add-image' ? 'active' : ''">Add
 							image to PDF</a></li>
@@ -36,7 +32,27 @@
 					<li class="nav-item"><a class="nav-link" href="#"
 						th:href="@{compress-pdf}"
 						th:classappend="${currentPage}=='compress-pdf' ? 'active' : ''">Compress PDF</a></li>	
-												
+					<li class="nav-item dropdown">
+												<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Convert
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="#" th:href="@{pdf-to-img}" th:classappend="${currentPage}=='pdf-to-img' ? 'active' : ''">PDF to Image</a>
+						<a class="dropdown-item" href="#" th:href="@{img-to-pdf}" th:classappend="${currentPage}=='img-to-pdf' ? 'active' : ''">Image to PDF</a>
+					</div>
+				</li>
+				
+				<li class="nav-item dropdown">
+												<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Security
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" href="#" th:href="@{add-password}" th:classappend="${currentPage}=='add-password' ? 'active' : ''">Add password (Encrypt)</a>
+						<a class="dropdown-item" href="#" th:href="@{remove-password}" th:classappend="${currentPage}=='remove-password' ? 'active' : ''">Remove password (Decrypt)</a>
+						<a class="dropdown-item" href="#" th:href="@{change-permissions}" th:classappend="${currentPage}=='change-permissions' ? 'active' : ''">Change permissions</a>
+						<a class="dropdown-item" href="#" th:href="@{add-watermark}" th:classappend="${currentPage}=='add-watermark' ? 'active' : ''">Add Watermark</a>
+					</div>
+				</li>							
 					<input type="checkbox" id="toggle-dark-mode"
 						th:onclick="javascript:toggleDarkMode()">
 					<a class="nav-link" href="#" for="toggle-dark-mode">Dark Mode</a>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<th:block th:insert="~{fragments/common :: head}"></th:block>
+<title>S-PDF Add Watermark</title>
+</head>
+
+<body>
+	<div th:insert="~{fragments/navbar.html :: navbar}"></div>
+	<br>
+	<br>
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				<h2>Add Watermark</h2>
+
+				<form method="post" enctype="multipart/form-data" action="add-watermark" class="mx-auto w-50">
+		            <div class="form-group">
+		                <label for="pdfFile">PDF File:</label>
+		                <input type="file" id="pdfFile" name="pdfFile" class="form-control" required/>
+		            </div>
+		            <div class="form-group">
+		                <label for="watermarkText">Watermark Text:</label>
+		                <input type="text" id="watermarkText" name="watermarkText" class="form-control" required/>
+		            </div>
+		            <div class="form-group">
+		                <label for="fontSize">Font Size:</label>
+		                <input type="text" id="fontSize" name="fontSize" class="form-control"/>
+		            </div>
+		            <div class="form-group">
+		                <label for="rotation">Rotation (0-360):</label>
+		                <input type="text" id="rotation" name="rotation" class="form-control"/>
+		            </div>
+		            <div class="form-group">
+		                <label for="widthSpacer">widthSpacer (Space between each watermark horizontally):</label>
+		                <input type="text" id="widthSpacer" name="widthSpacer" class="form-control"/>
+		            </div>
+		            <div class="form-group">
+		                <label for="heightSpacer">heightSpacer (Space between each watermark vertically):</label>
+		                <input type="text" id="heightSpacer" name="heightSpacer" class="form-control"/>
+		            </div>
+		            <div class="form-group text-center">
+		                <input type="submit" value="Add Watermark" class="btn btn-primary"/>
+		            </div>
+        </form> 
+</div>
+		</div>
+	</div>
+	<div th:insert="~{fragments/footer.html :: footer}"></div>
+</body>
+</html>

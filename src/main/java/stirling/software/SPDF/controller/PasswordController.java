@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.AccessPermission;
+import org.apache.pdfbox.pdmodel.encryption.StandardDecryptionMaterial;
 import org.apache.pdfbox.pdmodel.encryption.StandardProtectionPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +21,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.spire.pdf.PdfCompressionLevel;
-import com.spire.pdf.PdfDocument;
-import com.spire.pdf.PdfPageBase;
-import com.spire.pdf.exporting.PdfImageInfo;
-import com.spire.pdf.graphics.PdfBitmap;
-
 import stirling.software.SPDF.utils.PdfUtils;
-//import com.spire.pdf.*;
+
 @Controller
 public class PasswordController {
 
@@ -36,54 +31,62 @@ public class PasswordController {
 	@GetMapping("/add-password")
 	public String addPasswordForm(Model model) {
 		model.addAttribute("currentPage", "add-password");
-		return "add-password";
+		return "security/add-password";
+	}
+
+	@GetMapping("/remove-password")
+	public String removePasswordForm(Model model) {
+		model.addAttribute("currentPage", "remove-password");
+		return "security/remove-password";
+	}
+
+	@GetMapping("/change-permissions")
+	public String permissionsForm(Model model) {
+		model.addAttribute("currentPage", "change-permissions");
+		return "security/change-permissions";
+	}
+
+	@PostMapping("/remove-password")
+	public ResponseEntity<byte[]> compressPDF(@RequestParam("fileInput") MultipartFile fileInput,
+			@RequestParam(name = "password") String password) throws IOException {
+		PDDocument document = PDDocument.load(fileInput.getBytes(), password);
+		document.setAllSecurityToBeRemoved(true);
+		return PdfUtils.pdfDocToWebResponse(document, fileInput.getName() + "_password_removed.pdf");
 	}
 
 	@PostMapping("/add-password")
 	public ResponseEntity<byte[]> compressPDF(@RequestParam("fileInput") MultipartFile fileInput,
-            @RequestParam("password") String password,
-            @RequestParam(defaultValue = "128",value = "keyLength") int keyLength,
-            @RequestParam(defaultValue = "false",value = "canAssembleDocument") boolean canAssembleDocument,
-            @RequestParam(defaultValue = "false",value = "canExtractContent") boolean canExtractContent,
-            @RequestParam(defaultValue = "false",value = "canExtractForAccessibility") boolean canExtractForAccessibility,
-            @RequestParam(defaultValue = "false",value = "canFillInForm") boolean canFillInForm,
-            @RequestParam(defaultValue = "false",value = "canModify") boolean canModify,
-            @RequestParam(defaultValue = "false",value = "canModifyAnnotations") boolean canModifyAnnotations,
-            @RequestParam(defaultValue = "false",value = "canPrint") boolean canPrint,
-            @RequestParam(defaultValue = "false",value = "canPrintFaithful") boolean canPrintFaithful) throws IOException {
+			@RequestParam(defaultValue = "", name = "password") String password,
+			@RequestParam(defaultValue = "128", name = "keyLength") int keyLength,
+			@RequestParam(defaultValue = "false", name = "canAssembleDocument") boolean canAssembleDocument,
+			@RequestParam(defaultValue = "false", name = "canExtractContent") boolean canExtractContent,
+			@RequestParam(defaultValue = "false", name = "canExtractForAccessibility") boolean canExtractForAccessibility,
+			@RequestParam(defaultValue = "false", name = "canFillInForm") boolean canFillInForm,
+			@RequestParam(defaultValue = "false", name = "canModify") boolean canModify,
+			@RequestParam(defaultValue = "false", name = "canModifyAnnotations") boolean canModifyAnnotations,
+			@RequestParam(defaultValue = "false", name = "canPrint") boolean canPrint,
+			@RequestParam(defaultValue = "false", name = "canPrintFaithful") boolean canPrintFaithful)
+			throws IOException {
 
-		PDDocument  document = PDDocument.load(fileInput.getBytes());
-        AccessPermission ap = new AccessPermission();
-        ap.setCanAssembleDocument(canAssembleDocument);
-        ap.setCanExtractContent(canExtractContent);
-        ap.setCanExtractForAccessibility(canExtractForAccessibility);
-        ap.setCanFillInForm(canFillInForm);
-        ap.setCanModify(canModify);
-        ap.setCanModifyAnnotations(canModifyAnnotations);
-        ap.setCanPrint(canPrint);
-        ap.setCanPrintFaithful(canPrintFaithful);
-        StandardProtectionPolicy spp = new StandardProtectionPolicy(password, password, ap);
-        spp.setEncryptionKeyLength(keyLength);
+		PDDocument document = PDDocument.load(fileInput.getBytes());
+		AccessPermission ap = new AccessPermission();
 
-        spp.setPermissions(ap);
-        
-        document.protect(spp);
+		ap.setCanAssembleDocument(!canAssembleDocument);
+		ap.setCanExtractContent(!canExtractContent);
+		ap.setCanExtractForAccessibility(!canExtractForAccessibility);
+		ap.setCanFillInForm(!canFillInForm);
+		ap.setCanModify(!canModify);
+		ap.setCanModifyAnnotations(!canModifyAnnotations);
+		ap.setCanPrint(!canPrint);
+		ap.setCanPrintFaithful(!canPrintFaithful);
+		StandardProtectionPolicy spp = new StandardProtectionPolicy(password, password, ap);
+		spp.setEncryptionKeyLength(keyLength);
 
-     // Save the rearranged PDF to a ByteArrayOutputStream
-	ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-	document.save(outputStream);
+		spp.setPermissions(ap);
 
-	// Close the original document
-	document.close();
+		document.protect(spp);
 
-	// Prepare the response headers
-	HttpHeaders headers = new HttpHeaders();
-	headers.setContentType(MediaType.APPLICATION_PDF);
-	headers.setContentDispositionFormData("attachment", "compressed.pdf");
-	headers.setContentLength(outputStream.size());
-
-	// Return the response with the PDF data and headers
-	return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
+		return PdfUtils.pdfDocToWebResponse(document, fileInput.getName() + "_passworded.pdf");
 	}
 
 }
