@@ -1,4 +1,4 @@
-package stirling.software.SPDF.controller;
+package stirling.software.SPDF.controller.security;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
