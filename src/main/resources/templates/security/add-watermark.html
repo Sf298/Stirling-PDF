@@ -15,30 +15,34 @@
 			<div class="col-md-6">
 				<h2>Add Watermark</h2>
 
-				<form method="post" enctype="multipart/form-data" action="add-watermark" class="mx-auto w-50">
+				<form method="post" enctype="multipart/form-data" action="add-watermark">
 		            <div class="form-group">
-		                <label for="pdfFile">PDF File:</label>
-		                <input type="file" id="pdfFile" name="pdfFile" class="form-control" required/>
-		            </div>
+						<label>Select PDF to add watermark to:</label>
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" id="fileInput"
+								name="fileInput" required> <label
+								class="custom-file-label">Choose PDF</label>
+						</div>
+					</div>
 		            <div class="form-group">
 		                <label for="watermarkText">Watermark Text:</label>
-		                <input type="text" id="watermarkText" name="watermarkText" class="form-control" required/>
+		                <input type="text" id="watermarkText" name="watermarkText" class="form-control" placeholder="Stirling-PDF" required/>
 		            </div>
 		            <div class="form-group">
 		                <label for="fontSize">Font Size:</label>
-		                <input type="text" id="fontSize" name="fontSize" class="form-control"/>
+		                <input type="text" id="fontSize" name="fontSize" class="form-control" value="30"/>
 		            </div>
 		            <div class="form-group">
 		                <label for="rotation">Rotation (0-360):</label>
-		                <input type="text" id="rotation" name="rotation" class="form-control"/>
+		                <input type="text" id="rotation" name="rotation" class="form-control"  value="45"/>
 		            </div>
 		            <div class="form-group">
 		                <label for="widthSpacer">widthSpacer (Space between each watermark horizontally):</label>
-		                <input type="text" id="widthSpacer" name="widthSpacer" class="form-control"/>
+		                <input type="text" id="widthSpacer" name="widthSpacer" class="form-control" value="50"/>
 		            </div>
 		            <div class="form-group">
 		                <label for="heightSpacer">heightSpacer (Space between each watermark vertically):</label>
-		                <input type="text" id="heightSpacer" name="heightSpacer" class="form-control"/>
+		                <input type="text" id="heightSpacer" name="heightSpacer" class="form-control" value="50"/>
 		            </div>
 		            <div class="form-group text-center">
 		                <input type="submit" value="Add Watermark" class="btn btn-primary"/>
